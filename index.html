@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy birthday Nathalie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600&family=Kalam:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --pink: #f9a7f5;
+      --maroon: #800000;
+      --bg: #000000;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: #fff;
+      font-family: "Quicksand", system-ui, sans-serif;
+    }
+
+    .page {
+      position: relative;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow: hidden;
+      background: var(--bg);
+      isolation: isolate;
+    }
+
+    /* Soft animated glow behind the art (doesn’t cover the drawing) */
+    .page::before {
+      content: "";
+      position: absolute;
+      inset: -25%;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 55% 45% at 15% 75%, rgba(249, 167, 245, 0.09) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 88% 18%, rgba(128, 0, 0, 0.14) 0%, transparent 50%),
+        radial-gradient(ellipse 70% 50% at 50% 50%, rgba(40, 10, 30, 0.35) 0%, transparent 65%);
+      animation: bgPulse 22s ease-in-out infinite alternate, bgDrift 32s ease-in-out infinite alternate;
+    }
+
+    @keyframes bgPulse {
+      0%,
+      100% {
+        opacity: 0.75;
+        filter: brightness(1);
+      }
+      50% {
+        opacity: 1;
+        filter: brightness(1.08);
+      }
+    }
+
+    @keyframes bgDrift {
+      0% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+      }
+      100% {
+        transform: translate(2.5%, -1.5%) scale(1.06) rotate(1.2deg);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .scene-wrap,
+      .page::before,
+      .gift-hotspot::before,
+      .heart-particle {
+        animation: none !important;
+      }
+    }
+
+    /* Floating hearts (background + soft layer over the art) */
+    .hearts-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .hearts-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .heart-particle {
+      position: absolute;
+      will-change: transform;
+    }
+
+    .heart-particle svg {
+      display: block;
+      filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.35));
+    }
+
+    .hearts-bg .heart-particle {
+      opacity: 0.5;
+    }
+
+    .hearts-overlay .heart-particle {
+      opacity: 0.2;
+    }
+
+    @keyframes heartFloat {
+      0%,
+      100% {
+        transform: translate3d(0, 0, 0) rotate(var(--rot, 0deg)) scale(1);
+      }
+      50% {
+        transform: translate3d(var(--dx, 12px), var(--dy, -18px), 0) rotate(calc(var(--rot, 0deg) + 8deg)) scale(1.12);
+      }
+    }
+
+    @keyframes heartDriftSlow {
+      0% {
+        transform: translate3d(0, 0, 0) rotate(var(--rot, 0deg)) scale(1);
+      }
+      33% {
+        transform: translate3d(var(--dx, 10px), var(--dy, 8px), 0) rotate(calc(var(--rot, 0deg) + 5deg)) scale(1.06);
+      }
+      66% {
+        transform: translate3d(calc(var(--dx, 10px) * -0.8), var(--dy2, -14px), 0) rotate(calc(var(--rot, 0deg) - 4deg)) scale(0.94);
+      }
+      100% {
+        transform: translate3d(0, 0, 0) rotate(var(--rot, 0deg)) scale(1);
+      }
+    }
+
+    .scene-wrap {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: sceneSway 18s ease-in-out infinite;
+    }
+
+    @keyframes sceneSway {
+      0%,
+      100% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+      }
+      33% {
+        transform: translate(3px, -4px) rotate(0.35deg) scale(1.008);
+      }
+      66% {
+        transform: translate(-2px, 2px) rotate(-0.25deg) scale(1.005);
+      }
+    }
+
+    /* Frame matches rendered image size so the gift hotspot stays aligned with the white box */
+    .scene-frame {
+      position: relative;
+      z-index: 0;
+      display: inline-block;
+      line-height: 0;
+      max-width: 100vw;
+      max-height: 100vh;
+    }
+
+    .scene {
+      display: block;
+      max-width: 100vw;
+      max-height: 100vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    /* Click target: white gift box + hook */
+    .gift-hotspot {
+      position: absolute;
+      z-index: 3;
+      bottom: 3.5%;
+      right: 22%;
+      left: auto;
+      width: 11%;
+      min-width: 58px;
+      max-width: 112px;
+      height: 18%;
+      min-height: 72px;
+      max-height: 136px;
+      transform-origin: 100% 85%;
+      cursor: pointer;
+      border: none;
+      padding: 0;
+      background: transparent;
+      border-radius: 8px;
+      transition: transform 0.25s ease;
+    }
+
+    .gift-hotspot:hover {
+      transform: scale(1.06);
+    }
+
+    .gift-hotspot:focus-visible {
+      outline: 2px solid var(--pink);
+      outline-offset: 4px;
+    }
+
+    .gift-hotspot::before {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border-radius: 10px;
+      background: radial-gradient(ellipse at center, rgba(249, 167, 245, 0.15) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      animation: hotspotGlow 3s ease-in-out infinite;
+    }
+
+    .gift-hotspot:hover::before {
+      opacity: 1;
+    }
+
+    @keyframes hotspotGlow {
+      0%,
+      100% {
+        filter: brightness(1);
+      }
+      50% {
+        filter: brightness(1.15);
+      }
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+
+    .modal-backdrop.is-open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-panel {
+      position: relative;
+      width: min(640px, 100%);
+      max-height: min(85vh, 900px);
+      overflow: hidden;
+      border-radius: 16px;
+      background: linear-gradient(165deg, #2a1520 0%, #1a0a12 50%, #120810 100%);
+      border: 1px solid rgba(249, 167, 245, 0.25);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+      transform: scale(0.94) translateY(12px);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .modal-backdrop.is-open .modal-panel {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-header {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 1rem 1.25rem;
+      background: linear-gradient(to bottom, rgba(26, 10, 18, 0.98), rgba(26, 10, 18, 0.85));
+      border-bottom: 1px solid rgba(249, 167, 245, 0.12);
+    }
+
+    .modal-title {
+      margin: 0;
+      font-family: "Kalam", cursive;
+      font-size: 1.35rem;
+      font-weight: 400;
+      color: var(--pink);
+      letter-spacing: 0.02em;
+    }
+
+    .modal-close {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-size: 1.5rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .modal-close:hover {
+      background: rgba(249, 167, 245, 0.25);
+      transform: rotate(90deg);
+    }
+
+    .modal-body {
+      padding: 0 1.25rem 1.5rem;
+      max-height: calc(85vh - 80px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(249, 167, 245, 0.4) transparent;
+    }
+
+    .modal-body::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .modal-body::-webkit-scrollbar-thumb {
+      background: rgba(249, 167, 245, 0.35);
+      border-radius: 4px;
+    }
+
+    .letter-text {
+      margin: 0;
+      font-family: "Kalam", "Quicksand", cursive;
+      font-size: clamp(0.95rem, 2.8vw, 1.05rem);
+      font-weight: 300;
+      line-height: 1.65;
+      color: rgba(255, 250, 252, 0.92);
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .letter-stickers {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 0.45rem 0.65rem;
+      pointer-events: none;
+    }
+
+    .letter-stickers--top {
+      margin: 0 0 1.15rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 1px solid rgba(249, 167, 245, 0.12);
+    }
+
+    .letter-stickers--end {
+      margin: 1.75rem 0 0;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(249, 167, 245, 0.15);
+    }
+
+    .letter-sticker {
+      display: block;
+      width: clamp(58px, 17vw, 102px);
+      height: auto;
+      border-radius: 12px;
+      filter: drop-shadow(0 5px 16px rgba(0, 0, 0, 0.5));
+    }
+
+    .letter-stickers--end .letter-sticker {
+      width: clamp(52px, 14vw, 90px);
+    }
+
+    .letter-stickers picture {
+      line-height: 0;
+      animation: stickerBob 5s ease-in-out infinite;
+    }
+
+    .letter-stickers picture:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    .letter-stickers picture:nth-child(2) {
+      animation-delay: 0.4s;
+    }
+
+    .letter-stickers picture:nth-child(3) {
+      animation-delay: 0.8s;
+    }
+
+    .letter-stickers picture:nth-child(4) {
+      animation-delay: 1.2s;
+    }
+
+    .letter-stickers picture:nth-child(5) {
+      animation-delay: 1.6s;
+    }
+
+    @keyframes stickerBob {
+      0%,
+      100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-4px) rotate(1.5deg);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .letter-stickers picture {
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="hearts-bg" id="heartsBg" aria-hidden="true"></div>
+    <div class="scene-wrap">
+      <div class="scene-frame">
+        <img
+          class="scene"
+          src="assets/scene.png"
+          alt="Hand-drawn birthday art: happy birthday nathaliee, hearts, flowers, and a small white gift box."
+          width="1200"
+          height="900"
+          decoding="async"
+        />
+        <div class="hearts-overlay" id="heartsOverlay" aria-hidden="true"></div>
+        <button type="button" class="gift-hotspot" id="openLetter" aria-haspopup="dialog" aria-controls="letterModal" aria-expanded="false">
+          <span class="sr-only">Open birthday letter</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="letterModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="modal-panel">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">For Nathalie</h2>
+        <button type="button" class="modal-close" id="closeLetter" aria-label="Close letter">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="letter-stickers letter-stickers--top" aria-hidden="true">
+          <picture>
+            <source type="image/webp" srcset="assets/stickers/sticker-1.webp" />
+            <img class="letter-sticker" src="assets/stickers/sticker-1.png" alt="" width="120" height="120" loading="lazy" decoding="async" />
+          </picture>
+          <picture>
+            <source type="image/webp" srcset="assets/stickers/sticker-3.webp" />
+            <img class="letter-sticker" src="assets/stickers/sticker-3.png" alt="" width="120" height="120" loading="lazy" decoding="async" />
+          </picture>
+          <picture>
+            <source type="image/webp" srcset="assets/stickers/sticker-5.webp" />
+            <img class="letter-sticker" src="assets/stickers/sticker-5.png" alt="" width="120" height="120" loading="lazy" decoding="async" />
+          </picture>
+        </div>
+        <p class="letter-text" id="letterContent"></p>
+        <div class="letter-stickers letter-stickers--end" aria-hidden="true">
+          <picture>
+            <source type="image/webp" srcset="assets/stickers/sticker-1.webp" />
+            <img class="letter-sticker" src="assets/stickers/sticker-1.png" alt="" width="120" height="120" loading="lazy" decoding="async" />
+          </picture>
+          <picture>
+            <source type="image/webp" srcset="assets/stickers/sticker-2.webp" />
+            <img class="letter-sticker" src="assets/stickers/sticker-2.png" alt="" width="120" height="120" loading="lazy" decoding="async" />
+          </picture>
+          <picture>
+            <source type="image/webp" srcset="assets/stickers/sticker-3.webp" />
+            <img class="letter-sticker" src="assets/stickers/sticker-3.png" alt="" width="120" height="120" loading="lazy" decoding="async" />
+          </picture>
+          <picture>
+            <source type="image/webp" srcset="assets/stickers/sticker-4.webp" />
+            <img class="letter-sticker" src="assets/stickers/sticker-4.png" alt="" width="120" height="120" loading="lazy" decoding="async" />
+          </picture>
+          <picture>
+            <source type="image/webp" srcset="assets/stickers/sticker-5.webp" />
+            <img class="letter-sticker" src="assets/stickers/sticker-5.png" alt="" width="120" height="120" loading="lazy" decoding="async" />
+          </picture>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const LETTER = `Happy birthday,Nathalie sah todays ur birthday bas its the day i was truly born srha w idk men wen balesh aw kef bade eshrah bas ha jareb ad ma feye Nathalie everyday behke maake w everyday i fall deeper in love w bade ehke aan kter eshya bas ahamon eno ade u made me feel special b my birthday w ade 3enele el mawdooe sert heb eid milede abel ma ken yhemne hal nhar w ente kef baate yaane eshya ente yemken ma tkone 3tabartiya kter bas it mesnt the world men the sticker u sent la the vids li yk ade bhebon w hek w eno kel el nhar yaane kenet hases hale bel janneh w hayda w ma hata sheftik yaane w fi ma baaref kam balad baynetna bas eno idk u have ur ways nathalie ur so special khaye wallah w ad ma ektob w ad ma ehke ma ha eedar aaber aan ade khalaytene hes w ade yaane wallah khaye ur such a blessing hek metl allah yaane ydk ade bte3nile wallah its like bhal nhar sar ye3nile aktar men ma ye3nilek kaan ana khle2et w i mean it because of you bheb el hayet w because of you bdal aam edhak w mabsot w eno wallah ma aarfen eshrahlik yaane you made me feel alive nathalie ma kenet heb shi w hek w yk everything nathalie i feel so comfortable maake yaane ma fike tsad2e ade berteh elik hayala shi w berteh maake khaye u changed me wallah ma baaref ade li aam oulon bteedare tefhamiyon bas ad ma teedare ma ha teedare aanjad i love you so much nato.Nathalie yaane ata3na bikel shi w we still find w found the way back to eachother w eno from my birthday la ur birthday la ha yser sarlna sene mnaaref baaed manon bas kam kelme.I hope fena nkafe our thing w whatever happens no2af bweja w eno ma naaml give up abadan ana aanjad i believe in us w i believe eno were meant to be w ydk the things li bheson la elik tetzakare bas kenet elik eno ha erjaa zakrik baaden eno ha ndal w hek w lyom belik eno baaden berjaa bzakrik eno feyon la hol eyem w hek nathalie u mean the world to me ma bade ezkor shi in specific aashn kel mara bkon mahmom aw zaalen u find a way faj2a bser mabsot w mesh met2aser everytime bhes hale zaalen u change my mood w u always make my day nathalie wallah just trying to explain ente kefmen kel el maylet is impossible yaane idk le aam ezkera bas eno bas ata3o layele lkader ken hememne el mawdooe kter before shu heye w hek eno fates are written bhal nhar w i cant imagine my  life without you in it w i love kef we connect wallah amrar eno bkon bade ehkike w ma baarf aan shu bas hek faj2a mnehke kaza seaa bala ma hes w its the connection li hasayta men awal lahza taaraft aalayke ur such a fun person to talk to w eno i really mean kel shi aam oulo nathalie .
+As time passes bhes hale aktar attached w bye2wo my feelings kter w its bcz of ade ente mneha w ade ente u make me feel safe w mabsot men kel el maylet bhes its enough talking about ente kef betkhaline hes halaa ehke aanik ente ka nathalie❤️ nathalie ente ur such a caring person wallah maa kel  hada w i love love love ur character ade aweye w ade ad kel Shi w btefhame eno ur sooo mature u amaze me wallah nathalie the way ur always smilling w the way deyman btedhake kter shi helo w its nice to be able to talk to u w be around u aashn aanjad ur like a flower w eno i wish fene jeblik real flowers one day mohem nathalie loghetik w the way u talk yaane shu ma toule betfartine wallah w hayda shi ma baaref kef hal2sd ente adhak ensene baarfo w aktar ensen i enjoy talking to w eno even though ma dahranen kter w hek aande kter memories helwin maaik w i hope fena nkafe w create ahla w ajmal memories w nedhar bas needar idm it ka ne2 nathalie ur so thoughtful khaye w ma bte2ze abadn w maa l wa2et aam efhamik aktar ma fene oul hafzik aashn aandik kterr different hek ma baarf bas eno kel yom aktar w aktar w ur character is just wow wallah. the thing is eno everything katabto la halaa w i havent even mentioned ur looks nathalie ente aanjad aanjad ajmal ensen ebel aalam
+Idk from where to start yaane ur eyes ajmal 3yon bel aalam amrar baarf bezeejik w wa2afta bas eno i cant hold myself from admiring w hek bas etalaa aalayke ur so pretty khaye ur green eyes bhes el dene feyon the best eyes i have ever seen wallah w the freckles li aa ur nose hek bikafo shu aam jareb eshrah ur nose is so nice wallah ur face card KELO WALLAH WOW khaye ma baarf kef eshrah ur like an angel eno ma betkheyal fi ensen hal2ad helo ur cheeks kel shi about u nathalie wallah ur so cuteee w gorgeous ma baaref khaye ur hair bikel el toro2 suits u w ma baaref kef fi ensen shu ma yaaml ykon helo w yelba2lo wallah ur sooo pretty w eno ur body idm it hek i mean eno wallah its so nicee yaane ma baaref kef betoule badik ted3afe eno ur eno mostahel khaye nezm eskot nathalie i hope w pray eno ndal mkafyin our mawdooe w eno mahame shu ma yser ha dal hebik w ha dal metmasak fike w dal aaml kel shi la yemshe el hal w i love kef we deal with hayala obstacle aw meshkle bteje bwejna w kef mnetne2ash w hek baaref bade sheghel ka ana w ik ade ente sensitive w ha dal eshtghl aa hale la ser azbat ensen because u dont deserve anything a2al men hek nathalie ydk ade bade yeke bhayete w ade bte3nile love youuuu till the end ❤️❤️❤️❤️❤️❤️nathalie anjad i know you think am bayed tanajer w hek bas anjad ente kter helwe anjad BET SATLE wallah ad ma ola you don't understand adde i see u perfect w anjad ente ymkn toule eno no ur not w hek bas wallah in my eyes no matter what u say or do anjad you'll always be the nathalie i fell in love with and no matter what happens i'll always see you hek My perspective anik mostahel tetghayar Wahyet allah srha ana kel yom bnem w bfii bsir aarfik aktar w i think that's what my days about nathalie anjad ana ensen ma hame b wala shi gher fike w ana maande meshkle 2e23od  maake 10 hours w aktar w bas tkone aam tehke w ana aam esmaa ashen maande shi ahsn aamlo w hata law ande i'll always rather be with you nathalie.You don't know how much u mean to me wallah Inshallah ndal mkafyin hek w dal aam ehkike kel yom la kel hayete w ma yetghayar shi bayntna aw ana bmout mn jowa ashen metel ma dymn i tell you eno my life is nothing without you w anjad it's meaningless Ana Bmout fike nathalie aktar mn kel shi bl aalam w mostahel zaalik u don't understand adde it hurts when im mad and u tell me don't talk to me ashen anjad i try my best enno to never hurt you w hata law l denya kela maasbetne anjad dayman bkon ande soft spot elek w hek bas akid ha dal eshtghl aa mawdoue eno ma arjike eno maasab w dayman fesh khelee b kel shi ela fike bas ana when i actually tell you it's not enno am fesh khelee fike its aam fesh khelee maake w anjad you should know this Maande aghla menik nathalie w bmout kermelek Mnerjaa la eyunik baadne betzakr bas kenet emshe maake in school w yeje sun aa eeyunik w ysiro greeen kter anjad you don't understand ade bt khaline jen mn jowa bet satle ente nathalie ad ma ola sadiine it's way beyond that AHLAAAA EEYUN SHEYEFON BHAYETE w when you get shy bt sire tghate wejik kter cute hata law hayda azaaj shi ashen aa men bade etalaa iza mesh ente ya nathalie anjad.ur so pretty khalass maash ha oula bas anjad u deserve kelllll hal osas ten2alek yeha every day.The way u treat hek maria w hek anjad metel bentik bsir kaano albe aam ydoub eno ur so sweet nathalie eno kef bt fakre bl kel w dayman kter patient anjad it's so cute w anjad never ever think aan halik gher hek ente ahsan benet baarefa w ma bhayete taarafet aa benet halaad AWEYE w AD HALA w ma bt khale hada yaaser fiya w hek anjd hayda l shi ma btaarfe ade Helo la benet W kamen rihtik daymn bt satel wallah bt koune am temshe edeme w bshema anjad mane gharib bas wallah mafi shi fike gher ma baarfo anjad bhes hale stalker amrar bas i can't hold myself men etalaa alaayke ashen you're eno like irreplaceable eno wala benet metlik w anjd hayda l shi ma ha tsadii bas ente biida w bdal iida ajmal ensen ebel aalam wahyet allah.Idk what to say anything bas anjd i love you mn kel albe w i get to show you this on ur special day bas i want to show you this every day bas hek l hayet. Nathalie ur laugh wallah yemken iza fiye hoto alarm l soboh la dayman fii aa sawtik baamela w ente btaarfe Ur hair nathalie law kef ma aamalti law rabati law straight law half straight half curly law cream curly eno hek law ponytail horse aw shi mbrf shu b samowa😂😂😂😂 they are always perfect wallah wejik kteeer helo yaane bhes hata buzzcut yemkn telbaalik w anjad ma bestaghreb.Ur nose perfect nose bshufo w ente bhes you already know yaane bas dymn ana hon la zakrik eno ente ajmal wehde w wala hada 000.000000111 close la jamelik
+anjad kel shi fike zabet yaane srha aam jareb le2e shi eno mesh zabet bas wahyet allah mafi wala shi.Nathalie ana the first time i looked at you i fell in love with your eyes anjad wow wow wow wow wow . Hala la kef btehke wallah bt farte masalan ur so mean in a cute way ma baaref eshraha w bas toule ekhhh betkheyal wejik ente w zghire bl sticker w bhesik am taamliya anjad you don't understand ade bestahedmik w anjad ahdam walad yaane ole hamdellah eno ma kenet aarfik ana w zghir aw kenet katabtelik W rasamtelik hearts w taaalmeet shu yaane hob kermelik😛😛😛😛😛ahama shi ur emojis b fartone ya nathalie anjad yaret fine dal maake am ehkike kel yom w anjad im so grateful for u w hata law ana BADE EDHAR MAAKE w bade calls w bade kel shi i don't mind the little things maake w anjad hol the big things that matter w anjad i hope this letter shows you eno ana mostahel mostahel bhayete waaef hebik ya nathalie bmout fike ma btaarfe ade bhbk ydk ade bade yeke bhayete w anjad ma bade bhayete eno aamol shi yezeejik w yeezike ana ma aande ghayrik ya nathalie i love you so much`;
+
+    function openModal() {
+      const modal = document.getElementById("letterModal");
+      const btn = document.getElementById("openLetter");
+      modal.hidden = false;
+      modal.classList.add("is-open");
+      btn.setAttribute("aria-expanded", "true");
+      document.body.style.overflow = "hidden";
+      document.getElementById("closeLetter").focus();
+    }
+
+    function closeModal() {
+      const modal = document.getElementById("letterModal");
+      const btn = document.getElementById("openLetter");
+      modal.classList.remove("is-open");
+      btn.setAttribute("aria-expanded", "false");
+      document.body.style.overflow = "";
+      setTimeout(() => {
+        modal.hidden = true;
+      }, 350);
+      btn.focus();
+    }
+
+    document.getElementById("letterContent").textContent = LETTER;
+
+    document.getElementById("openLetter").addEventListener("click", openModal);
+    document.getElementById("closeLetter").addEventListener("click", closeModal);
+
+    document.getElementById("letterModal").addEventListener("click", (e) => {
+      if (e.target.id === "letterModal") closeModal();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      const modal = document.getElementById("letterModal");
+      if (e.key === "Escape" && modal.classList.contains("is-open")) {
+        closeModal();
+      }
+    });
+
+    const HEART_PATH =
+      "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z";
+
+    function spawnHearts(container, count, opts) {
+      if (!container) return;
+      const ns = "http://www.w3.org/2000/svg";
+      const slow = opts && opts.slow;
+      const pinkFirst = opts && opts.pinkBias !== false;
+
+      for (let i = 0; i < count; i++) {
+        const wrap = document.createElement("span");
+        wrap.className = "heart-particle";
+        const size = (opts && opts.sizeMin) ? opts.sizeMin + Math.random() * (opts.sizeMax - opts.sizeMin) : 14 + Math.random() * 36;
+        wrap.style.left = Math.random() * 100 + "%";
+        wrap.style.top = Math.random() * 100 + "%";
+        const rot = -35 + Math.random() * 70;
+        const dx = -18 + Math.random() * 36;
+        const dy = -28 + Math.random() * -25;
+        const dy2 = -20 + Math.random() * 40;
+        wrap.style.setProperty("--rot", rot + "deg");
+        wrap.style.setProperty("--dx", dx + "px");
+        wrap.style.setProperty("--dy", dy + "px");
+        wrap.style.setProperty("--dy2", dy2 + "px");
+        const dur = slow ? 14 + Math.random() * 18 : 7 + Math.random() * 11;
+        const delay = -Math.random() * dur;
+        wrap.style.animation = (slow ? "heartDriftSlow" : "heartFloat") + " " + dur + "s ease-in-out infinite";
+        wrap.style.animationDelay = delay + "s";
+
+        const svg = document.createElementNS(ns, "svg");
+        svg.setAttribute("viewBox", "0 0 24 24");
+        svg.setAttribute("width", String(Math.round(size)));
+        svg.setAttribute("height", String(Math.round(size)));
+        const path = document.createElementNS(ns, "path");
+        path.setAttribute("d", HEART_PATH);
+        const usePink = pinkFirst ? i % 2 === 0 : i % 2 === 1;
+        path.setAttribute("fill", usePink ? "var(--pink)" : "var(--maroon)");
+        svg.appendChild(path);
+        wrap.appendChild(svg);
+        container.appendChild(wrap);
+      }
+    }
+
+    spawnHearts(document.getElementById("heartsBg"), 32, { sizeMin: 12, sizeMax: 44, slow: true });
+    spawnHearts(document.getElementById("heartsOverlay"), 18, { sizeMin: 10, sizeMax: 28, slow: false });
+  </script>
+</body>
+</html>
