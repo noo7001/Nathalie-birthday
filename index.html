@@ -281,9 +281,9 @@
       max-height: min(85vh, 900px);
       overflow: hidden;
       border-radius: 16px;
-      background: linear-gradient(165deg, #2a1520 0%, #1a0a12 50%, #120810 100%);
-      border: 1px solid rgba(249, 167, 245, 0.25);
-      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+      background: linear-gradient(165deg, #ffe3ef 0%, #ffd2e6 55%, #ffc2dc 100%);
+      border: 1px solid rgba(128, 0, 0, 0.18);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.35) inset;
       transform: scale(0.94) translateY(12px);
       transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
     }
@@ -301,8 +301,8 @@
       justify-content: space-between;
       gap: 0.75rem;
       padding: 1rem 1.25rem;
-      background: linear-gradient(to bottom, rgba(26, 10, 18, 0.98), rgba(26, 10, 18, 0.85));
-      border-bottom: 1px solid rgba(249, 167, 245, 0.12);
+      background: linear-gradient(to bottom, rgba(255, 226, 239, 0.98), rgba(255, 210, 230, 0.9));
+      border-bottom: 1px solid rgba(128, 0, 0, 0.14);
     }
 
     .modal-title {
@@ -310,7 +310,7 @@
       font-family: "Kalam", cursive;
       font-size: 1.35rem;
       font-weight: 400;
-      color: var(--pink);
+      color: rgba(128, 0, 0, 0.92);
       letter-spacing: 0.02em;
     }
 
@@ -320,8 +320,8 @@
       height: 40px;
       border: none;
       border-radius: 10px;
-      background: rgba(255, 255, 255, 0.08);
-      color: #fff;
+      background: rgba(128, 0, 0, 0.12);
+      color: rgba(60, 10, 28, 0.95);
       font-size: 1.5rem;
       line-height: 1;
       cursor: pointer;
@@ -329,7 +329,7 @@
     }
 
     .modal-close:hover {
-      background: rgba(249, 167, 245, 0.25);
+      background: rgba(128, 0, 0, 0.18);
       transform: rotate(90deg);
     }
 
@@ -339,7 +339,7 @@
       overflow-y: auto;
       overflow-x: hidden;
       scrollbar-width: thin;
-      scrollbar-color: rgba(249, 167, 245, 0.4) transparent;
+      scrollbar-color: rgba(128, 0, 0, 0.35) transparent;
     }
 
     .modal-body::-webkit-scrollbar {
@@ -347,7 +347,7 @@
     }
 
     .modal-body::-webkit-scrollbar-thumb {
-      background: rgba(249, 167, 245, 0.35);
+      background: rgba(128, 0, 0, 0.28);
       border-radius: 4px;
     }
 
@@ -357,7 +357,7 @@
       font-size: clamp(0.95rem, 2.8vw, 1.05rem);
       font-weight: 300;
       line-height: 1.65;
-      color: rgba(255, 250, 252, 0.92);
+      color: rgba(60, 10, 28, 0.92);
       white-space: pre-wrap;
       word-wrap: break-word;
     }
@@ -385,14 +385,14 @@
 
     .letter-sticker {
       display: block;
-      width: clamp(58px, 17vw, 102px);
+      width: clamp(74px, 20vw, 128px);
       height: auto;
       border-radius: 12px;
       filter: drop-shadow(0 5px 16px rgba(0, 0, 0, 0.5));
     }
 
     .letter-stickers--end .letter-sticker {
-      width: clamp(52px, 14vw, 90px);
+      width: clamp(68px, 18vw, 116px);
     }
 
     .letter-stickers picture {
